@@ -1,23 +1,20 @@
 package br.com.alura.forum.models;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Curso {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private String titulo;
+	private String nome;
 	private String categoria;
 
 	public Curso() {
-	}
-
-	public Curso(int id, String titulo, String categoria) {
-		super();
-		this.id = id;
-		this.titulo = titulo;
-		this.categoria = categoria;
-	}
-
-	public Curso(String titulo, String categoria) {
-		this.titulo = titulo;
-		this.categoria = categoria;
 	}
 
 	public int getId() {
@@ -28,12 +25,12 @@ public class Curso {
 		this.id = id;
 	}
 
-	public String getTitulo() {
-		return titulo;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	public String getCategoria() {
@@ -68,6 +65,6 @@ public class Curso {
 
 	@Override
 	public String toString() {
-		return "Curso [id=" + id + ", titulo=" + titulo + ", categoria=" + categoria + "]";
+		return "Curso [id=" + id + ", titulo=" + nome + ", categoria=" + categoria + "]";
 	}
 }
