@@ -4,4 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.alura.forum.models.Curso;
 
-public interface CursoRepository extends JpaRepository<Curso, Integer>{ }
+public interface CursoRepository extends JpaRepository<Curso, Integer> {
+	Curso findByNome(String nomeCurso);
+}

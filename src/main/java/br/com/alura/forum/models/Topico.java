@@ -21,7 +21,7 @@ public class Topico {
 	private Long id;
 	private String titulo;
 	private String mensagem;
-	private LocalDateTime dataCriacao;
+	private LocalDateTime dataCriacao = LocalDateTime.now();
 	@Enumerated(EnumType.STRING)
 	private StatusTopico status = StatusTopico.NAO_RESPONDIDO;
 	@ManyToOne
@@ -35,7 +35,6 @@ public class Topico {
 	}
 
 	public Topico(String titulo, String mensagem, Curso curso) {
-		super();
 		this.titulo = titulo;
 		this.mensagem = mensagem;
 		this.curso = curso;
