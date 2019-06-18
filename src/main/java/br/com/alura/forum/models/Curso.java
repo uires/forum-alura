@@ -2,16 +2,21 @@ package br.com.alura.forum.models;
 
 public class Curso {
 	private int id;
-	private String name;
+	private String titulo;
 	private String categoria;
 
 	public Curso() {
 	}
 
-	public Curso(int id, String name, String categoria) {
+	public Curso(int id, String titulo, String categoria) {
 		super();
 		this.id = id;
-		this.name = name;
+		this.titulo = titulo;
+		this.categoria = categoria;
+	}
+
+	public Curso(String titulo, String categoria) {
+		this.titulo = titulo;
 		this.categoria = categoria;
 	}
 
@@ -23,12 +28,12 @@ public class Curso {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getTitulo() {
+		return titulo;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
 	}
 
 	public String getCategoria() {
@@ -63,6 +68,6 @@ public class Curso {
 
 	@Override
 	public String toString() {
-		return "Curso [id=" + id + ", name=" + name + ", categoria=" + categoria + "]";
+		return "Curso [id=" + id + ", titulo=" + titulo + ", categoria=" + categoria + "]";
 	}
 }
