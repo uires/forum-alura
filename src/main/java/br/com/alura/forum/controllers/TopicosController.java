@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,9 +44,11 @@ public class TopicosController {
 	@GetMapping
 	public Page<TopicoDTO> lista(@RequestParam(name = "nomeCurso", required = false) String nomeCurso, 
 				@RequestParam(name = "pagina" , required = false, defaultValue = "0") int pagina, 
-				@RequestParam(name = "quantidade" , required = false, defaultValue = "10" ) int quantidade) {
+				@RequestParam(name = "quantidade" , required = false, defaultValue = "10" ) int quantidade,
+				@RequestParam(name = "ordenacao", defaultValue = "ASC", required = false) String ordenacao,
+				@RequestParam(name = "filtroPalavra", defaultValue = " ", required = false) String filtroPalavra) {
 		
-		Pageable pageable = PageRequest.of(pagina, quantidade);
+		Pageable pageable = PageRequest.of(pagina, quantidade, Direction.fromString(ordenacao), filtroPalavra);
 		if (nomeCurso == null) {
 			return TopicoDTO.converter(topicoRepository.findAll(pageable));
 		} else {
