@@ -2,6 +2,7 @@ package br.com.alura.forum.controllers;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -32,19 +33,19 @@ public class TopicosController {
 
 	@Autowired
 	private TopicoRepository topicoRepository;
-	
+
 	@Autowired
 	private CursoRepository cursoRepository;
 
 	@GetMapping
 	public List<TopicoDTO> lista(String nomeCurso) {
-		if(nomeCurso == null) {
+		if (nomeCurso == null) {
 			return TopicoDTO.converter(topicoRepository.findAll());
 		} else {
 			return TopicoDTO.converter(topicoRepository.findByCursoNome(nomeCurso));
 		}
 	}
-	
+
 	@PostMapping
 	@Transactional
 	public ResponseEntity<TopicoDTO> cadastrar(@RequestBody @Valid TopicoForm form, UriComponentsBuilder uriComponentsBuilder) {
@@ -52,24 +53,35 @@ public class TopicosController {
 		URI uri = uriComponentsBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
 		return ResponseEntity.created(uri).body(new TopicoDTO(topico));
 	}
-	
+
 	@GetMapping(path = "/{id}")
-	public TopicoDetalheDTO detalhar(@PathVariable("id") Integer id) {
-		Topico topico = this.topicoRepository.getOne(id);
-		return new TopicoDetalheDTO(topico);
+	public ResponseEntity<TopicoDetalheDTO> detalhar(@PathVariable("id") Integer id) {
+		Optional<Topico> topico = this.topicoRepository.findById(id);
+		if (topico.isPresent()) {
+			return ResponseEntity.ok(new TopicoDetalheDTO(topico.get()));
+		}
+		return ResponseEntity.notFound().build();
 	}
-	
+
 	@PutMapping(path = "/{id}")
 	@Transactional
 	public ResponseEntity<TopicoDTO> atualizar(@RequestBody @Valid AtualizarTopicoForm form, @PathVariable Integer id) {
-		Topico topico = form.atualizar(id, topicoRepository);
-		return ResponseEntity.ok(new TopicoDTO(topico));
+		Optional<Topico> optional = this.topicoRepository.findById(id);
+		if (optional.isPresent()) {
+			Topico topico = form.atualizar(id, topicoRepository);
+			return ResponseEntity.ok(new TopicoDTO(topico));
+		}
+		return ResponseEntity.notFound().build();
 	}
-	
+
 	@DeleteMapping(path = "/{id}")
 	@Transactional
 	public ResponseEntity<?> remover(@PathVariable("id") Integer id) {
-		this.topicoRepository.deleteById(id);
-		return ResponseEntity.ok().build();
+		Optional<Topico> optional = this.topicoRepository.findById(id);
+		if (optional.isPresent()) {
+			this.topicoRepository.deleteById(id);
+			return ResponseEntity.ok().build();
+		}
+		return ResponseEntity.notFound().build();
 	}
 }
