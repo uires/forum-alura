@@ -3,6 +3,7 @@ package br.com.alura.forum.controllers;
 import java.net.URI;
 import java.util.List;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.alura.forum.controllers.dto.TopicoDTO;
 import br.com.alura.forum.controllers.dto.TopicoDetalheDTO;
+import br.com.alura.forum.controllers.forms.AtualizarTopicoForm;
 import br.com.alura.forum.controllers.forms.TopicoForm;
 import br.com.alura.forum.models.Topico;
 import br.com.alura.forum.repositorys.CursoRepository;
@@ -52,5 +55,12 @@ public class TopicosController {
 	public TopicoDetalheDTO detalhar(@PathVariable("id") Integer id) {
 		Topico topico = this.topicoRepository.getOne(id);
 		return new TopicoDetalheDTO(topico);
+	}
+	
+	@PutMapping(path = "/{id}")
+	@Transactional
+	public ResponseEntity<TopicoDTO> atualizar(@RequestBody @Valid AtualizarTopicoForm form, @PathVariable Integer id) {
+		Topico topico = form.atualizar(id, topicoRepository);
+		return ResponseEntity.ok(new TopicoDTO(topico));
 	}
 }
