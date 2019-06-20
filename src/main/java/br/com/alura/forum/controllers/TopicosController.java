@@ -8,9 +8,9 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +40,7 @@ public class TopicosController {
 
 	@Autowired
 	private CursoRepository cursoRepository;
-
+	/*
 	@GetMapping
 	public Page<TopicoDTO> lista(@RequestParam(name = "nomeCurso", required = false) String nomeCurso, 
 				@RequestParam(name = "pagina" , required = false, defaultValue = "0") int pagina, 
@@ -49,6 +49,17 @@ public class TopicosController {
 				@RequestParam(name = "filtroPalavra", defaultValue = " ", required = false) String filtroPalavra) {
 		
 		Pageable pageable = PageRequest.of(pagina, quantidade, Direction.fromString(ordenacao), filtroPalavra);
+		if (nomeCurso == null) {
+			return TopicoDTO.converter(topicoRepository.findAll(pageable));
+		} else {
+			return TopicoDTO.converter(topicoRepository.findByCursoNome(nomeCurso, pageable));
+		}
+	}
+	*/
+	
+	@GetMapping
+	public Page<TopicoDTO> lista(@RequestParam(name = "nomeCurso", required = false) String nomeCurso,
+			@PageableDefault(sort = "id", direction = Direction.DESC, page = 0, size = 10) Pageable pageable) {
 		if (nomeCurso == null) {
 			return TopicoDTO.converter(topicoRepository.findAll(pageable));
 		} else {
