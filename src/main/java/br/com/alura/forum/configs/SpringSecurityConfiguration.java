@@ -12,8 +12,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import br.com.alura.forum.configs.auth.AutheticationByFiltrerToken;
 import br.com.alura.forum.configs.auth.AutheticationServiceImplementation;
+import br.com.alura.forum.configs.auth.TokenService;
+import br.com.alura.forum.repositorys.UsuarioRepository;
 
 @EnableWebSecurity
 @Configuration
@@ -21,6 +25,12 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private AutheticationServiceImplementation authenticationServiceImplementation;
+	
+	@Autowired
+	private TokenService tokenService;
+	
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -30,11 +40,13 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-				.antMatchers(HttpMethod.GET, "/topicos").permitAll()
-				.antMatchers(HttpMethod.GET, "/topicos/*").permitAll()
-				.antMatchers(HttpMethod.POST, "/auth").permitAll()
-				.anyRequest().authenticated()
-				.and().csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		.antMatchers(HttpMethod.GET, "/topicos").permitAll()
+		.antMatchers(HttpMethod.GET, "/topicos/*").permitAll()
+		.antMatchers(HttpMethod.POST, "/auth").permitAll()
+		.anyRequest().authenticated()
+		.and().csrf().disable()
+		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		.and().addFilterBefore(new AutheticationByFiltrerToken(tokenService, usuarioRepository), UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Override
